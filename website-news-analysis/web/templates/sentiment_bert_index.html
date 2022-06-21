@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    {%include 'layout_head.html'%}
+
+    <body>
+        {%include 'layout_menu.html'%}
+        <div class="ts-divider"></div>
+        <div class="ts-content is-vertically-very-padded">
+            <div class="ts-container is-narrow">
+
+                <div class="ts-grid is-relaxed">
+                    <div class="column is-6-wide">
+                        <div class="ts-box">
+                            <div class="ts-content is-secondary">
+                                <div class="ts-row is-middle-aligned" style="line-height: 1">
+                                    <div class="column is-fluid">搜尋區</div>
+                                    <div class="column">
+                                        <span class="ts-icon is-face-smile-icon"></span>
+                                        <span class="ts-icon is-face-grin-squint-icon"></span>
+                                        <span class="ts-icon is-face-angry-icon"></span>
+                                        <span class="ts-icon is-face-kiss-beam-icon"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ts-divider"></div>
+                            <div class="ts-content">
+                                <div class="ts-text is-label">情緒分類器</div>
+                                <div class="ts-text is-label">輸入一段帶有情緒的文字...</div>
+                                <div class="ts-space"></div>
+                                <div class="ts-input is-fluid">
+                                    <textarea id="textarea_content" name="textarea_text" rows="6">蘋果不好吃</textarea>
+                                </div>
+                                <div class="ts-space"></div>
+                                <button class="ts-button is-fluid" id="btn_deep">BERT深度模型</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-10-wide">
+                        <!-- 繪圖區塊 -->
+                        <div class="ts-header is-heavy">判讀結果</div>
+                        <div class="ts-divider is-section"></div>
+                        <div class="ts-content">
+                            <!-- Show sentiment score (probability) -->
+                            <ul id="show_sentiment_proba"></ul>
+                        </div>
+                        <!-- 區塊結束 -->
+                    </div>
+                </div>
+                <div class="ts-divider"></div>
+                {%include 'layout_footer.html'%}
+            </div>
+        </div>
+    </body>
+</html>
+
+
+<script>
+
+    // default text 
+    $('#textarea_content').val("高級餐廳，服務好, 食物美味");
+
+    const target_div = document.getElementById("show_sentiment_proba");
+
+    //-- btn_deep on click event
+    $('#btn_deep').on('click', function (e) {
+        call_ajax();
+    });
+
+    //--ajax function for getting sentimental score
+    function call_ajax() {
+        const input_text = $('#textarea_content').val();
+        console.log(input_text);
+        target_div.innerHTML = ''; //顯示區先要清空
+        $.ajax({
+            type: "POST",
+            // way #1: url path
+            url: "/api/sentimentBert/api_get_sentiment",
+            // way #2: call the first API 
+            //url: "http://127.0.0.1:8000/api_get_sentiment/",
+            data: {
+                "input_text": input_text,
+            },
+            success: function (received) {
+                //show sentiment score:
+
+                $('#show_sentiment_proba').append("<li>負向機率:" + received.Negative + "</li>");
+                //target_div.innerHTML += "<li>負向機率:" + item.Negative + "</li>";
+                //用這樣寫也可以塞入一段HTML碼
+                target_div.innerHTML += "<li>正向機率:" + received["Positive"] + "</li>";
+
+
+                //也可以這樣顯示
+                for (key in received)
+                {
+                    $('#show_sentiment_proba').append(key +":"+ received[key]+" ")
+                    //console.log(key);
+                    //console.log(received[key]);
+                }
+
+
+            } //function
+        }); //ajax
+
+    } //ajax function
+
+</script>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+    {%include 'layout_head.html'%}
+
+    <body>
+        {%include 'layout_menu.html'%}
+        <div class="ts-divider"></div>
+        <div class="ts-content is-vertically-very-padded">
+            <div class="ts-container is-narrow">
+
+                <div class="ts-grid is-relaxed">
+                    <div class="column is-6-wide">
+                        <div class="ts-box">
+                            <div class="ts-content is-secondary">
+                                <div class="ts-row is-middle-aligned" style="line-height: 1">
+                                    <div class="column is-fluid">搜尋區</div>
+                                    <div class="column">
+                                        <span class="ts-icon is-face-smile-icon"></span>
+                                        <span class="ts-icon is-face-grin-squint-icon"></span>
+                                        <span class="ts-icon is-face-angry-icon"></span>
+                                        <span class="ts-icon is-face-kiss-beam-icon"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ts-divider"></div>
+                            <div class="ts-content">
+                                <div class="ts-text is-label">你關心的關鍵詞的情緒分析</div>
+                                <div class="ts-space"></div>
+                                <div class="ts-input is-fluid">
+                                    <input id="input_keyword" name="userkey" value="高雄"/>
+                                </div>
+                                <small class="form-text text-muted"
+                                  >查找的關鍵字(或片段文字)，可輸入多個，空白隔開。
+                                </small>
+                                <div class="ts-space"></div>
+                                <div class="ts-text is-label">條件</div>
+                                <div class="ts-space"></div>
+                                <div class="ts-wrap">
+                                    <label class="ts-radio is-small"><input type="radio" name="condradio" value="and">and</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="condradio" value="or" checked>or</label>
+                                </div>
+                                <div class="ts-space"></div>
+                                <div class="ts-text is-label">新聞類別</div>
+                                <div class="ts-space"></div>
+                                <div class="ts-wrap">
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="全部" checked>全部</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="AI 人工智慧">AI 人工智慧</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="尖端科技">尖端科技</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="市場動態">市場動態</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="生物科技">生物科技</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="網路">網路</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="能源科技">能源科技</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="行動裝置">行動裝置</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="零組件">零組件</label>
+                                </div>
+                                <div class="ts-space"></div>
+                                <div class="ts-text is-label">最近多少周?</div>
+                                <div class="ts-space"></div>
+                                <div class="ts-wrap">
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="1">1</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="2">2</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="3">3</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="4">4</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="5">5</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="6">6</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="8">8</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="10">10</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="12" checked>12</label>
+                                </div>
+                                <div class="ts-space"></div>
+                                <button class="ts-button is-fluid" id="btn_ok">查詢</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-10-wide">
+                        <!-- 繪圖區塊 -->
+                        <div class="ts-header is-heavy">情緒分析:文章層級</div>
+                        <div class="ts-divider is-section"></div>
+                        <div class="ts-content">
+                            <canvas id="article_senti_pie_chart"></canvas>
+                            <ul id="senti_info"></ul>
+                        </div>
+                        <!-- 區塊結束 -->
+                        <!-- 繪圖區塊 -->
+                        <div class="ts-header is-heavy">正反面情緒變化</div>
+                        <div class="ts-divider is-section"></div>
+                        <div class="ts-content">
+                          <canvas id="time_line_chart"></canvas>
+                        </div>
+                        <!-- 區塊結束 -->
+                    </div>
+                </div>
+                <div class="ts-divider"></div>
+                {%include 'layout_footer.html'%}
+            </div>
+        </div>
+    </body>
+</html>
+
+<!-- jQuery指令用到的js-->
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<!-- chartjs圖js-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+
+<!-- Here are your js code -->
+<script>
+  call_ajax();
+
+  //**按鈕事件
+  $("#btn_ok").on("click", function () {
+    call_ajax();
+  }); //event function
+
+  $("input[name='cateradio']").on("change", function () {
+    call_ajax();
+  }); //event function
+
+  $("input[name='wkradio']").on("change", function () {
+    call_ajax();
+  }); //event function
+
+  $("input[name='condradio']").on("change", function () {
+    call_ajax();
+  }); //event function
+
+  // Draw the sentiment line chart here!
+  let linechartElem = document
+    .getElementById("time_line_chart")
+    .getContext("2d");
+  //let linechart = null;
+
+  // pie chart
+  let piechartElem = document
+    .getElementById("article_senti_pie_chart")
+    .getContext("2d");
+
+  // Ajax function to draw charts
+  function call_ajax() {
+    const userkey = $("#input_keyword").val();
+    const weeks = $("input[name='wkradio']:checked").val();
+    const cate = $("input[name='cateradio']:checked").val();
+    const cond = $("input[name='condradio']:checked").val();
+
+    if (userkey.length < 2) {
+      alert("輸入關鍵字不可空白或小於兩個中文字!");
+      return 0;
+    }
+
+    $.ajax({
+      type: "POST",
+      url: "/api/userKeywordSentiment/api_get_userkey_sentiment",
+      //url: "userkeyword_senti/api_get_userkey_sentiment/",
+      //url: "127.0.0.1:8000/key_senti/api_get_userkey_sentiment/",
+      data: {
+        userkey: userkey,
+        cate: cate,
+        weeks: weeks,
+        cond: cond,
+      }, // pass to server
+      success: function (received) {
+        // draw pie chart
+        const data_pie = received["sentiCount"];
+        // 先清除前一個圖形
+        if (window.piechart) piechart.destroy();
+        // 畫圓餅圖函數寫法，前面不要加修飾語const, let, var
+        piechart = drawPieChart(piechartElem, data_pie);
+
+        $("#senti_info").empty();
+        for (let k in data_pie) {
+          $("#senti_info").append(k + ": " + data_pie[k] + "篇 ");
+        }
+        //$("#senti_info").append("Pos:" + data_pie.pos + "篇, ");
+        //$("#senti_info").append("Obj:" + data_pie.obj + "篇, ");
+        //$("#senti_info").append("Neg:" + data_pie.neg + "篇");
+
+        // draw time-based line chart
+        const data_pos = received["data_pos"];
+        const data_neg = received["data_neg"];
+
+        // 先清除前一個圖形
+        if (window.linechart) linechart.destroy();
+        // 畫線圖
+        linechart = drawLineChart(linechartElem, data_pos, data_neg);
+      }, //success function
+    }); //ajax
+  } //function call_ajax()
+
+  // PieChart function寫法
+  function drawPieChart(chartElem, chartdata) {
+    let chartSpec = {
+      type: "pie",
+      data: {
+        labels: ["正面", "負面", "中立"],
+        datasets: [
+          {
+            data: [chartdata.Positive, chartdata.Negative, chartdata.Neutral],
+            backgroundColor: ["rgba(0,0,255,0.3)", "rgba(255,0,0,0.3)", "rgba(150,150,150,0.3)"],
+          },
+        ],
+      },
+      options: {},
+    };
+    return new Chart(chartElem, chartSpec);
+  }
+
+  // Line chart function
+  function drawLineChart(linechartElem, data_pos, data_neg) {
+    // for positive sentiment line chart
+    let dataPos = {
+      label: "正面",
+      data: data_pos,
+      borderColor: "rgba(0,0,255,0.3)", //"blue", //藍色表示正面
+      backgroundColor: "rgba(0,0,255,0.2)", //背景顏色
+      borderWidth: 1,
+      fill: true,
+
+    };
+    // for negative sentiment line chart
+    let dataNeg = {
+      label: "負面",
+      data: data_neg,
+      borderColor:"rgba(255,0,0,0.3)",//"red", //紅色表示負面
+      backgroundColor: "rgba(255,0,0,0.2)", //背景顏色
+      borderWidth: 1,
+      fill: true,
+    };
+
+    let options_detail = {
+      legend: {
+        display: true,
+      },
+      scales: {
+        xAxes: [
+          {
+            type: "time",
+            time: {
+              unit: "day",
+              displayFormats: {
+                //day: 'DD-MM-YYYY'
+                day: "MM/DD",
+              },
+            },
+          },
+        ],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: "篇數",
+            },
+          },
+        ],
+      },
+    };
+
+    let chart_spec = {
+      type: "line",
+      data: {
+        datasets: [dataPos, dataNeg], //有兩條線，兩組資料使用陣列存放即可
+      },
+      options: options_detail,
+    };
+
+    // now draw the sentiment line chart
+    //if (linechart)
+    //    linechart.destroy();
+    return new Chart(linechartElem, chart_spec);
+  }
+
+</script>

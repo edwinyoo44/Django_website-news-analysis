@@ -5,7 +5,12 @@ app_name="views"
 
 urlpatterns = [
     path('', views.index),
-    path('ner/<type>', views.ner),
-    path('keyword/<type>', views.keyword),
-    path('person/<type>', views.person),
+    path('topNer/<type>', views.topNer),
+    path('topKeyword/<type>', views.topKeyword),
+    path('topPerson/<type>', views.topPerson),
+    path('userKeyword/<type>', views.userKeyword),
+    path('userKeywordAssociation/<type>', views.userKeywordAssociation),
+    path('userKeywordSentiment/<type>', views.userKeywordSentiment),
+    path('newsRcmdBert/<type>', views.newsRcmdBert),
+    path('sentimentBert/<type>', views.sentimentBert),
 ]

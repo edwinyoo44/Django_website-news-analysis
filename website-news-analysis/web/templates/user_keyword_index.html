@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+    {%include 'layout_head.html'%}
+
+    <body>
+        {%include 'layout_menu.html'%}
+        <div class="ts-divider"></div>
+        <div class="ts-content is-vertically-very-padded">
+            <div class="ts-container is-narrow">
+
+                <div class="ts-grid is-relaxed">
+                    <div class="column is-6-wide">
+                        <div class="ts-box">
+                            <div class="ts-content is-secondary">
+                                <div class="ts-row is-middle-aligned" style="line-height: 1">
+                                    <div class="column is-fluid">搜尋區</div>
+                                    <div class="column">
+                                        <span class="ts-icon is-face-smile-icon"></span>
+                                        <span class="ts-icon is-face-grin-squint-icon"></span>
+                                        <span class="ts-icon is-face-angry-icon"></span>
+                                        <span class="ts-icon is-face-kiss-beam-icon"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ts-divider"></div>
+                            <div class="ts-content">
+                                <div class="ts-text is-label">關心哪個關鍵詞?</div>
+                                <div class="ts-space"></div>
+                                <div class="ts-input is-fluid">
+                                    <input id="input_keyword" name="userkey" value="高雄"/>
+                                </div>
+                                <small class="form-text text-muted"
+                                  >查找的關鍵字(或片段文字)，可輸入多個，空白隔開。
+                                </small>
+                                <div class="ts-space"></div>
+                                <div class="ts-text is-label">條件</div>
+                                <div class="ts-space"></div>
+                                <div class="ts-wrap">
+                                    <label class="ts-radio is-small"><input type="radio" name="condradio" value="and">and</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="condradio" value="or" checked>or</label>
+                                </div>
+                                <div class="ts-space"></div>
+                                <div class="ts-text is-label">新聞類別</div>
+                                <div class="ts-space"></div>
+                                <div class="ts-wrap">
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="全部" checked>全部</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="AI 人工智慧">AI 人工智慧</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="尖端科技">尖端科技</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="市場動態">市場動態</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="生物科技">生物科技</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="網路">網路</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="能源科技">能源科技</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="行動裝置">行動裝置</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="零組件">零組件</label>
+                                </div>
+                                <div class="ts-space"></div>
+                                <div class="ts-text is-label">最近多少周?</div>
+                                <div class="ts-space"></div>
+                                <div class="ts-wrap">
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="1">1</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="2">2</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="3">3</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="4">4</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="5">5</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="6">6</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="8">8</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="10">10</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="12" checked>12</label>
+                                </div>
+                                <div class="ts-space"></div>
+                                <button class="ts-button is-fluid" id="btn_ok">查詢</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-10-wide">
+                        <!-- 繪圖區塊 -->
+                        <div class="ts-header is-heavy">出現頻率以時間呈現</div>
+                        <div class="ts-divider is-section"></div>
+                        <div class="ts-content">
+                            觀察每個時間點的有多少篇報導(聲量大小)
+                            <canvas id="keyword_time_line_chart"></canvas>
+                        </div>
+                        <!-- 區塊結束 -->
+                        <!-- 繪圖區塊 -->
+                        <div class="ts-header is-heavy">熱門程度:有幾篇新聞報導提到它?</div>
+                        <div class="ts-divider is-section"></div>
+                        <div class="ts-content">
+                            <ul id="keyword_article_count"></ul>
+                        </div>
+                        <!-- 區塊結束 -->
+                        <!-- 繪圖區塊 -->
+                        <div class="ts-header is-heavy">熱門程度:提到它的次數?</div>
+                        <div class="ts-divider is-section"></div>
+                        <div class="ts-content">
+                            <ul id="keyword_frequency"></ul>
+                        </div>
+                        <!-- 區塊結束 -->
+                    </div>
+                </div>
+                <div class="ts-divider"></div>
+                {%include 'layout_footer.html'%}
+            </div>
+        </div>
+    </body>
+</html>
+<script>
+
+    call_ajax();
+
+    //**按鈕事件
+    $('#btn_ok').on('click', function () {
+        call_ajax();
+    }); //event function
+
+    $("input[name='cateradio']").on('change', function () {
+        call_ajax();
+    }); //event function
+
+    $("input[name='wkradio']").on('change', function () {
+        call_ajax();
+    }); //event function
+    $("input[name='condradio']").on('change', function () {
+        call_ajax();
+    }); //event function
+
+    function call_ajax() {
+        const userkey = $("#input_keyword").val();
+        const weeks = $("input[name='wkradio']:checked").val();
+        const cate = $("input[name='cateradio']:checked").val();
+        const cond = $("input[name='condradio']:checked").val();
+
+        if (userkey.length < 2) {
+            alert("輸入關鍵字不可空白或小於兩個中文字!");
+            return 0;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/api/userKeyword/api_get_top_userkey",
+            //url: "http://127.0.0.1:8000/userkeyword/api_get_top_userkey/",
+            data: {
+                "userkey": userkey,
+                'cate': cate,
+                'weeks': weeks,
+                'cond': cond,
+            }, // pass to server
+            success: function (received) {
+
+                const article_count = received['key_occurrence_cat'];
+                console.log(article_count);
+                $('#keyword_article_count').empty();
+
+                //將內容加上li標籤附加起來顯示
+                for (let key in article_count) {
+                    let paste = "<li>" + key + ":" + article_count[key] + "</li>";
+                    $('#keyword_article_count').append(paste);
+                }
+                const kwfreq = received['key_freq_cat'];
+                console.log(kwfreq);
+                $('#keyword_frequency').empty();
+                for (let key in kwfreq) {
+                    let paste = "<li>" + key + ":" + kwfreq[key] + "</li>";
+                    $('#keyword_frequency').append(paste);
+                }
+
+                const data_key_time_freq = received['key_time_freq'];
+                console.log(data_key_time_freq);
+                showtimechart(data_key_time_freq);
+
+            } //function
+        }); //ajax
+    } //call_ajax()
+
+    let ctx_key_time = document.getElementById("keyword_time_line_chart").getContext('2d');
+    
+    //宣告chart變數在此，它是全域變數，初值為null，畫圖函數在繪畫新圖時會先檢查這個變數，若是不為null，表示已經有舊圖存在，會先清除(destroy)這個chart變數
+    let chart = null; 
+
+    function showtimechart(data_key_time_freq) {
+        const myoptions = {
+            type: 'line',
+            data: {
+                datasets:
+                    [{
+                        label: 's2',
+                        borderColor: 'red',
+                        data: data_key_time_freq,
+                    }]
+            },
+            options: {
+                legend: {
+                    display: false,
+                },
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        time: {
+                            unit: 'day',
+                            displayFormats: {
+                                //day: 'DD-MM-YYYY'
+                                day: 'MM/DD'
+                            }
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                        },
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: "出現次數",
+                        }
+                    }]
+                }
+            }
+        };
+
+        console.log(chart); 
+
+// 檢查chart變數是否存在，如果存在，表示已經有之前畫的圖，必須要先清除之後，再畫新的圖。否則會有新舊圖重疊現象
+        if (chart) 
+            chart.destroy();
+//也可以用以下這種方式檢查與清除舊圖。window指的是這個頁面，這個頁面有很多變數存在，檢查chart是否存在，若有存在，
+        //if (window.chart) {
+        //    chart.destroy();
+        //}
+        // 畫一張新圖
+        chart = new Chart(ctx_key_time, myoptions); //the chart variable is define outside of this function
+    }
+
+    // test samples
+    /*
+    var data_key_time_freq = [{"x": "2019-03-07", "y": 2},
+     {"x": "2019-03-08", "y": 2},
+     {"x": "2019-03-09", "y": 13}]
+    */
+
+</script>

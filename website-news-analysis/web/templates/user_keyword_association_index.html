@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+    {%include 'layout_head.html'%}
+
+    <body>
+        {%include 'layout_menu.html'%}
+        <div class="ts-divider"></div>
+        <div class="ts-content is-vertically-very-padded">
+            <div class="ts-container is-narrow">
+
+                <div class="ts-grid is-relaxed">
+                    <div class="column is-6-wide">
+                        <div class="ts-box">
+                            <div class="ts-content is-secondary">
+                                <div class="ts-row is-middle-aligned" style="line-height: 1">
+                                    <div class="column is-fluid">搜尋區</div>
+                                    <div class="column">
+                                        <span class="ts-icon is-face-smile-icon"></span>
+                                        <span class="ts-icon is-face-grin-squint-icon"></span>
+                                        <span class="ts-icon is-face-angry-icon"></span>
+                                        <span class="ts-icon is-face-kiss-beam-icon"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ts-divider"></div>
+                            <div class="ts-content">
+                                <div class="ts-text is-label">關心哪個關鍵詞?</div>
+                                <div class="ts-space"></div>
+                                <div class="ts-input is-fluid">
+                                    <input id="input_keyword" name="userkey" value="高雄 產業"/>
+                                </div>
+                                <small class="form-text text-muted"
+                                  >查找的關鍵字(或片段文字)，可輸入多個，空白隔開。
+                                </small>
+                                <div class="ts-space"></div>
+                                <div class="ts-text is-label">條件</div>
+                                <div class="ts-space"></div>
+                                <div class="ts-wrap">
+                                    <label class="ts-radio is-small"><input type="radio" name="condradio" value="and">and</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="condradio" value="or" checked>or</label>
+                                </div>
+                                <div class="ts-space"></div>
+                                <div class="ts-text is-label">新聞類別</div>
+                                <div class="ts-space"></div>
+                                <div class="ts-wrap">
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="全部" checked>全部</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="AI 人工智慧">AI 人工智慧</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="尖端科技">尖端科技</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="市場動態">市場動態</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="生物科技">生物科技</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="網路">網路</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="能源科技">能源科技</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="行動裝置">行動裝置</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="cateradio" value="零組件">零組件</label>
+                                </div>
+                                <div class="ts-space"></div>
+                                <div class="ts-text is-label">最近多少周?</div>
+                                <div class="ts-space"></div>
+                                <div class="ts-wrap">
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="1">1</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="2">2</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="3">3</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="4">4</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="5">5</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="6">6</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="8">8</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="10">10</label>
+                                    <label class="ts-radio is-small"><input type="radio" name="wkradio" value="12" checked>12</label>
+                                </div>
+                                <div class="ts-space"></div>
+                                <button class="ts-button is-fluid" id="btn_ok">查詢</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-10-wide">
+                        <!-- 繪圖區塊 -->
+                        <div class="ts-header is-heavy">這些詞與它同時出現喔</div>
+                        <div class="ts-divider is-section"></div>
+                        <div class="ts-content">
+                          <div id="cloud"></div>
+                        </div>
+                        <!-- 區塊結束 -->
+                        <!-- 繪圖區塊 -->
+                        <div class="ts-header is-heavy">以下新聞與它有關</div>
+                        <div class="ts-divider is-section"></div>
+                        <div class="ts-content">
+                          <!-- 這個標籤顯示頁碼 -->
+                          <div class="ts-pagination">
+                            
+                          </div>
+                          <ul class="list-group" id="newslinks"></ul>
+                        </div>
+                        <!-- 區塊結束 -->
+                        <!-- 繪圖區塊 -->
+                        <div class="ts-header is-heavy">關鍵字所在的段落</div>
+                        <div class="ts-divider is-section"></div>
+                        <div class="ts-content">
+                          <!-- 這個標籤顯示頁碼 -->
+                          <ul class="list-group" id="same_paragraph"></ul>
+                        </div>
+                        <!-- 區塊結束 -->
+                        <!-- 繪圖區塊 -->
+                        <div class="ts-header is-heavy">與它同時出現的關鍵字</div>
+                        <div class="ts-divider is-section"></div>
+                        <div class="ts-content">
+                          <ul id="related_words"></ul>
+                        </div>
+                        <!-- 區塊結束 -->
+                    </div>
+                </div>
+                <div class="ts-divider"></div>
+                {%include 'layout_footer.html'%}
+            </div>
+        </div>
+    </body>
+</html>
+
+<!-- paginating.js is located in the local static folder -->
+<!-- 載入頁碼的js -->
+<script type="text/javascript" src="/static/pagination_bs4.js"></script>
+
+<!-- Here are your codes -->
+<script>
+  // Show the page with default setting when page is initialized.
+  call_ajax();
+
+  // btn submit
+  $("#btn_ok").on("click", function () {
+    call_ajax();
+  }); //event function
+
+  // category radio button
+  $("input[name='cateradio']").on("change", function () {
+    call_ajax();
+  }); //event function
+
+  // weeks radio button
+  $("input[name='wkradio']").on("change", function () {
+    call_ajax();
+  }); //event function
+
+  // condition radio button
+  $("input[name='condradio']").on("change", function () {
+    call_ajax();
+  }); //event function
+
+  function call_ajax() {
+    const userkey = $("#input_keyword").val();
+    const weeks = $("input[name='wkradio']:checked").val();
+    const cate = $("input[name='cateradio']:checked").val();
+    const cond = $("input[name='condradio']:checked").val();
+
+    if (userkey.length < 2) {
+      alert("輸入關鍵字不可空白或小於兩個中文字!");
+      return 0;
+    }
+    $.ajax({
+      type: "POST",
+      url: "/api/userKeywordAssociation/api_get_userkey_associate",
+      data: {
+        userkey: userkey,
+        cate: cate,
+        weeks: weeks,
+        cond: cond,
+      }, // pass to server
+      success: function (received) {
+        // show news title and link
+        const newslinks = received["newslinks"];
+        $("#newslinks").empty();
+        if (newslinks.length == 0) {
+          alert("No result returned!");
+        }
+        // show news title and link
+        for (let i = 0; i < newslinks.length; i++) {
+          const msg =
+            '<li><a href="' +
+            newslinks[i].link +
+            '" target="_blank">' +
+            newslinks[i].category +
+            ":" +
+            newslinks[i].title +
+            "</a></li>";
+          $("#newslinks").append(msg);
+        }
+
+        //clear the paging area
+        $(".ts-pagination-container-newslinks").empty();
+
+        // process pagination
+        paginate_newslinks();
+
+        // show related words
+        const related_words = received["related_words"];
+        $("#related_words").empty();
+        for (let i = 0; i < related_words.length; i++) {
+          const msg = "<li>" + related_words[i] + "</li>";
+          $("#related_words").append(msg);
+        }
+
+        // show paragraphs containing the user keywords
+        // pagination
+        const same_paragraph = received["same_paragraph"];
+
+        $("#same_paragraph").empty();
+
+        for (let i = 0; i < same_paragraph.length; i++) {
+          const msg = "<li>" + same_paragraph[i] + "</li>";
+          $("#same_paragraph").append(msg);
+        }
+
+        //clear the paging area
+        //
+        $(".ts-pagination-container-paragraph").empty();
+
+        // process pagination
+        paginate_paragraph();
+
+        // draw word cloud for related words
+        topWordToDraw = received.clouddata;
+        $("#cloud").empty();
+        drawCloud(topWordToDraw, "#cloud");
+      }, //success function
+
+      error: function (msg, status) {
+        console.log(msg);
+        console.log(status);
+      }, //print status and msg when ajax goes wrong
+    }); //ajax
+  } //function call_ajax()
+
+  // paging for news list
+  // Reference: https://github.com/AlexisHolyoak/paginathing
+
+  function paginate_newslinks() {
+    // 把顯示在#newslinks的條列式的文字 整理成逐頁顯示
+    $("#newslinks").paginathing({
+      perPage: 10, // show item per page
+      insertAfter: "#newslinks", //class or id (eg: .element or #element). append the paginator after certain element
+
+      limitPagination: false, // false or number. Limiting your pagination number.
+      pageNumbers: true, // showing current page number of total pages number, to work properly limitPagination must be true
+      prevNext: true, // enable previous and next button
+      firstLast: true, // enable first and last button
+      prevText: "&laquo;", // Previous button text
+      nextText: "&raquo;", // Next button text
+      firstText: "First", // "First button" text
+      lastText: "Last", // "Last button" text
+      containerClass: "ts-pagination-container-newslinks", //這是頁碼元件的class名稱 清除時會用到 extend default container class
+      ulClass: "ts-pagination", // extend default ul class
+      liClass: "item", // extend li class
+      activeClass: "is-active", // active link class
+      disabledClass: "disable", // disabled link class,
+    });
+  } //pagination
+
+  // paging for news list
+  function paginate_paragraph() {
+    // 把顯示在#newslinks的條列式的文字 整理成逐頁顯示
+    $("#same_paragraph").paginathing({
+      perPage: 8, // show item per page
+      insertAfter: "#same_paragraph", //class or id (eg: .element or #element). append the paginator after certain element
+
+      limitPagination: false, // false or number. Limiting your pagination number.
+      pageNumbers: true, // showing current page number of total pages number, to work properly limitPagination must be true
+      prevNext: true, // enable previous and next button
+      firstLast: true, // enable first and last button
+      prevText: "&laquo;", // Previous button text
+      nextText: "&raquo;", // Next button text
+      firstText: "First", // "First button" text
+      lastText: "Last", // "Last button" text
+      containerClass: "ts-pagination-container-paragraph", //這是頁碼元件的class名稱 清除時會用到  extend default container class
+      ulClass: "ts-pagination", // extend default ul class
+      liClass: "page", // extend li class
+      activeClass: "is-active", // active link class
+      disabledClass: "disable", // disabled link class,
+    });
+  } //pagination
+
+  function drawCloud(topWordToDraw, element_id) {
+    // You should set a proper box size to show cloud chart
+    const width = 500;
+    const height = 500;
+
+    // First define your cloud data, using `text` and `size` properties:
+    // Next you need to use the layout script to calculate the placement, rotation and size of each word:
+    // Constructs a new cloud layout instance.
+    // Wordcloud features that are different from one word to the other
+    d3.layout
+      .cloud()
+      .size([width, height])
+      .words(topWordToDraw) //data for cloud chart
+      .rotate(function () {
+        //return ~~(Math.random() * 2) * 90; //~~1.5 => 1  (same as Math.floor(1.5))
+        return 0; // don't rotate
+      })
+      .font("Impact")
+      .fontSize(function (d) {
+        return d.size;
+      })
+      .on("end", draw) //call function draw()
+      .start();
+
+    // Finally implement `draw`, which performs the D3 drawing
+    // This function takes the output of 'layout' above and draw the words
+    // Wordcloud features that are THE SAME from one word to the other can be here
+    function draw(words) {
+      const fill = d3.scale.category20();
+
+      // append the svg object to the body of the page
+      d3.select(element_id)
+        .append("svg") // element_id such as "#cloud"
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr(
+          "transform",
+          "translate(" + ~~(width / 2) + "," + ~~(height / 2) + ")"
+        )
+        .selectAll("text")
+        .data(words)
+        .enter()
+        .append("text")
+        .style("font-size", function (d) {
+          return d.size + "px";
+        })
+        .style("-webkit-touch-callout", "none")
+        .style("-webkit-user-select", "none")
+        .style("-khtml-user-select", "none")
+        .style("-moz-user-select", "none")
+        .style("-ms-user-select", "none")
+        .style("user-select", "none")
+        .style("cursor", "default")
+        .style("font-family", "Impact")
+        .style("fill", function (d, i) {
+          return fill(i);
+        })
+        .attr("text-anchor", "middle")
+        .attr("transform", function (d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function (d) {
+          return d.text;
+        });
+    } //draw
+  } //drawCloud()
+</script>
